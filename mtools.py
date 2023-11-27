@@ -22,7 +22,6 @@ class Ind:
             Ind.i = 0
             print('')
 
-
 class MixinVis:
     def make_vis(self,col):
         self.col_name = col.name
@@ -83,15 +82,17 @@ class MixinVis:
             for index,row in temp_df.iterrows():
                 row_vis += str(index) + ' '*(3-len(str(index)))
             
+            nan = False
             if sum(self.temp_df['bar_intervals'].isna())>0:
+                nan = len(self.temp_df['bar_intervals'])-1
                 row_vis+='\n'+' '*(len(self.temp_df['bar_intervals'])*3-3) + '^ \n'
                 row_vis+=' '*(len(self.temp_df['bar_intervals'])*3-3) + '^\n'
                 row_vis+=' '*(len(self.temp_df['bar_intervals'])*3-3) + '^\n'
                 row_vis+=' '*(len(self.temp_df['bar_intervals'])*3-3) + 'NA\n'
-            row_vis += '\n______________________________________________________\n'
+            row_vis += '______________________________________________________\n'
             
             for index,row in temp_df.iterrows():
-                row_vis+=f"{index} - [{round(min_temp + (max_temp-min_temp)*index/len(temp_df),2)}-{round(min_temp + (max_temp-min_temp)*(index+1)/len(temp_df),2)}) ~{round(row['tech_column_for_count'])}\n"
+                row_vis+=f"{index} - [{round(min_temp + (max_temp-min_temp)*index/len(temp_df),2) if nan != index else 'nan'}-{round(min_temp + (max_temp-min_temp)*(index+1)/len(temp_df),2) if nan != index else 'nan'}) ~{round(row['tech_column_for_count'])}\n"
             
         else:
             row_vis += f'no visualisation for {col.type}'
@@ -250,5 +251,6 @@ class StatisticsDF(MixinVis):
         
     def print_stat(self):
         print(self)
+
 # x = StatisticsDF(df)
 # x['latitude']
