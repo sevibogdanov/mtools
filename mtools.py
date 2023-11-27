@@ -37,20 +37,29 @@ class MixinVis:
             for _ in range(1,15)[::-1]:
                 for index,row in temp_df.iterrows():
                     if row['height'] >= _:
-                        row_vis += '○ '
+                        row_vis += '○  '
                     else:
-                        row_vis += '  '
+                        row_vis += '   '
                 row_vis += '\n'
             for index,row in temp_df.iterrows():
-                row_vis += '¯ '
+                row_vis += '¯  '
+            
+            row_vis+='\n'
+            for index,row in temp_df.iterrows():
+                row_vis += str(index) + ' '*(3-len(str(index)))
                 
-            row_vis += '\n____________________________________\n'
+            row_vis += '\n______________________________________________________\n'
+            
+            for index,row in temp_df.iterrows():
+                row_vis+=f"{index} - {row[col.name]} ~({round(row['tech_column_for_count'])})\n"
             return row_vis
         
         elif col.type in ('int','float'):
             self.temp_df = self.df[[col.name,'tech_column_for_count']]
             self.temp_df['diff'] = self.temp_df[col.name].apply(lambda x: self.temp_df[col.name].max() - self.temp_df[col.name].min())
             self.temp_df['min'] = self.temp_df[col.name].apply(lambda x: self.temp_df[col.name].min())
+            min_temp = self.temp_df[col.name].min()
+            max_temp = self.temp_df[col.name].max()
             self.temp_df['max'] = self.temp_df[col.name].apply(lambda x: (self.temp_df[col.name].max() - self.temp_df[col.name].min()))
             self.temp_df['normalized'] = self.temp_df.apply(lambda x: x[col.name] - x['min'],axis=1)
             self.temp_df['bar_intervals'] = self.temp_df.apply(lambda x: x['normalized']/x['max'] * 15//1,axis=1)
@@ -64,19 +73,25 @@ class MixinVis:
 
                 for index,row in temp_df.iterrows():
                     if row['height'] >= _:
-                        row_vis += '○ '
+                        row_vis += '○  '
                     else:
-                        row_vis += '  '
+                        row_vis += '   '
                 row_vis += '\n'
             for index,row in temp_df.iterrows():
-                row_vis += '¯ '
+                row_vis += '¯  '
+            row_vis+='\n'
+            for index,row in temp_df.iterrows():
+                row_vis += str(index) + ' '*(3-len(str(index)))
+            
             if sum(self.temp_df['bar_intervals'].isna())>0:
-                row_vis+='\n'+' '*16*2 + '^ \n'
-                row_vis+=' '*16*2 + '^\n'
-                row_vis+=' '*16*2 + '^\n'
-                row_vis+=' '*16*2 + 'NA\n'
-            row_vis += '____________________________________\n'
-            return row_vis
+                row_vis+='\n'+' '*(len(self.temp_df['bar_intervals'])*3-3) + '^ \n'
+                row_vis+=' '*(len(self.temp_df['bar_intervals'])*3-3) + '^\n'
+                row_vis+=' '*(len(self.temp_df['bar_intervals'])*3-3) + '^\n'
+                row_vis+=' '*(len(self.temp_df['bar_intervals'])*3-3) + 'NA\n'
+            row_vis += '\n______________________________________________________\n'
+            
+            for index,row in temp_df.iterrows():
+                row_vis+=f"{index} - [{round(min_temp + (max_temp-min_temp)*index/len(temp_df),2)}-{round(min_temp + (max_temp-min_temp)*(index+1)/len(temp_df),2)}) ~{round(row['tech_column_for_count'])}\n"
             
         else:
             row_vis += f'no visualisation for {col.type}'
@@ -227,7 +242,7 @@ class StatisticsDF(MixinVis):
         text+= f"Std    {col.std}\n"
         text+= f"Avg    {col.avg}\n\n"
         text+= f"Min {col.min} ->Med {col.med} -> Max {col.max}\n"
-        text += '____________________________________\n'
+        text += '______________________________________________________\n'
         text+=self.make_vis(col)
         
         print(text)
