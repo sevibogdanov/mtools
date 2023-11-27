@@ -103,11 +103,20 @@ class MixinVis:
 class StatisticsColumn:
     def __init__(self,column):
         self.column = column
-        self.type = str(type(max(column.dropna()))).replace("<class '",'').replace("'>",'')
+        try:
+            self.type = str(type(max(column.dropna()))).replace("<class '",'').replace("'>",'')
+        except:
+            self.type = 'empty'
         self.name = column.name
         self.unique_values = len(column.unique())
-        self.min = self.max_val()
-        self.max = self.min_val()
+        try:
+            self.min = self.max_val()
+        except:
+            self.min = '-'
+        try:
+            self.max = self.min_val()
+        except:
+            self.max = '-'
         self.len = len(column)
         self.na = '-' if str(round(sum(column.isna()) / len(column)*100))+'%' =='0%' else str(round(sum(column.isna()) / len(column)*100))+'%'
         self.avg = '-' if self.type not in ('int','float') else round(self.column.mean(),2)
@@ -116,7 +125,7 @@ class StatisticsColumn:
 
     def max_val(self):
         if self.type in ('int','float','datetime.date'):
-            if self.type in ('int','float'):         
+            if self.type in ('int','float','datetime.date'):         
                 return round(self.column.min(),2)
             else:
                 return self.column.min()
@@ -124,7 +133,7 @@ class StatisticsColumn:
             return '-'
     def min_val(self):
         if self.type in ('int','float','datetime.date'):
-            if self.type in ('int','float'):         
+            if self.type in ('int','float','datetime.date'):         
                 return round(self.column.max(),2)
             else:
                 return self.column.max()
@@ -251,6 +260,5 @@ class StatisticsDF(MixinVis):
         
     def print_stat(self):
         print(self)
-
 # x = StatisticsDF(df)
 # x['latitude']
