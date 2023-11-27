@@ -44,7 +44,7 @@ class MixinVis:
             for index,row in temp_df.iterrows():
                 row_vis += '¯ '
                 
-            row_vis += '____________________________________\n'
+            row_vis += '\n____________________________________\n'
             return row_vis
         
         elif col.type in ('int','float'):
@@ -189,25 +189,25 @@ class StatisticsDF(MixinVis):
             print(' '*1000,end='\r')
     def __repr__(self):
         text = f'len = {len(self.df)}\n'
-        text+= f'{x.mem_usage}\n'
-        text+= f"name  {' '*(x.repr_len_dict['name']-len('name'))}"
-        text+= f"type  {' '*(x.repr_len_dict['type']-len('type'))}"
-        text+= f"unique  {' '*(max(x.repr_len_dict['unique_values'],len('unique'))-len('unique'))}"
+        text+= f'{self.mem_usage}\n'
+        text+= f"name  {' '*(self.repr_len_dict['name']-len('name'))}"
+        text+= f"type  {' '*(self.repr_len_dict['type']-len('type'))}"
+        text+= f"unique  {' '*(max(self.repr_len_dict['unique_values'],len('unique'))-len('unique'))}"
         text+= f"na  {'   '}"
-        text+= f"min  {' '*(x.repr_len_dict['min']-len('min'))}"
-        text+= f"max  {' '*(x.repr_len_dict['max']-len('max'))}"
-        text+= f"std  {' '*(x.repr_len_dict['std']-len('std'))}"
-        text+= f"avg  {' '*(x.repr_len_dict['avg']-len('avg'))}"
+        text+= f"min  {' '*(self.repr_len_dict['min']-len('min'))}"
+        text+= f"max  {' '*(self.repr_len_dict['max']-len('max'))}"
+        text+= f"std  {' '*(self.repr_len_dict['std']-len('std'))}"
+        text+= f"avg  {' '*(self.repr_len_dict['avg']-len('avg'))}"
         text+='\n\n'
         for each in self.stat_col:
-            text+= f"{each.name}  {' '*(x.repr_len_dict['name']-len(each.name))}"
-            text+= f"{each.type}  {' '*(x.repr_len_dict['type']-len(each.type))}"
-            text+= f"{each.unique_values}  {' '*(max(x.repr_len_dict['unique_values'],len('unique'))-len(str(each.unique_values)))}"
+            text+= f"{each.name}  {' '*(self.repr_len_dict['name']-len(each.name))}"
+            text+= f"{each.type}  {' '*(self.repr_len_dict['type']-len(each.type))}"
+            text+= f"{each.unique_values}  {' '*(max(self.repr_len_dict['unique_values'],len('unique'))-len(str(each.unique_values)))}"
             text+= f"{each.na}  {' ' * (5-len(each.na))}"
-            text+= f"{each.min}  {' '*(x.repr_len_dict['min']-len(str(each.min)))}"
-            text+= f"{each.max}  {' '*(x.repr_len_dict['max']-len(str(each.max)))}"
-            text+= f"{each.std}  {' '*(x.repr_len_dict['std']-len(str(each.std)))}"
-            text+= f"{each.avg}  {' '*(x.repr_len_dict['avg']-len(str(each.avg)))}"
+            text+= f"{each.min}  {' '*(self.repr_len_dict['min']-len(str(each.min)))}"
+            text+= f"{each.max}  {' '*(self.repr_len_dict['max']-len(str(each.max)))}"
+            text+= f"{each.std}  {' '*(self.repr_len_dict['std']-len(str(each.std)))}"
+            text+= f"{each.avg}  {' '*(self.repr_len_dict['avg']-len(str(each.avg)))}"
             text+= f"\n"
         return text
     
@@ -232,8 +232,8 @@ class StatisticsDF(MixinVis):
         
         print(text)
         del self.df['tech_column_for_count']
+        
     def print_stat(self):
         print(self)
-
 # x = StatisticsDF(df)
 # x['latitude']
