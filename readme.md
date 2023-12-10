@@ -1,6 +1,7 @@
 mtools.py - 
 * class Ind - счетчик для циклов
 * class StatisticsDF - анализ датафрейма
+
 async_geo.py - пример асинхронной работы с pandas
 
 # Обертка для pandas для экспрес анализа датафрейма
